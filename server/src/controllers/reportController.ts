@@ -150,7 +150,7 @@ export class ReportController {
     }
 
     const isAdmin = req.user?.role === 'admin';
-    const isDev = process.env.NODE_ENV === 'development' && process.env.NODE_ENV !== 'test';
+    const isDev = process.env.NODE_ENV === 'development';
 
     // If report is unlocked/paid, requester is admin, or in development mode
     if (report.isPaid || isAdmin || isDev) {
