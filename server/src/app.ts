@@ -27,7 +27,22 @@ export function createApp(): express.Application {
   const clientOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
   app.use(
     cors({
-      origin: [clientOrigin, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+      origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps, curl, postman)
+        if (!origin) return callback(null, true);
+        
+        if (
+          origin === clientOrigin ||
+          origin === 'http://localhost:5173' ||
+          origin === 'http://127.0.0.1:5173' ||
+          origin === 'https://chattruth.vercel.app' ||
+          origin.endsWith('.vercel.app')
+        ) {
+          return callback(null, true);
+        }
+        
+        return callback(null, true);
+      },
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
